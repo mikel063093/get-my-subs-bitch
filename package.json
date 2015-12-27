@@ -1,5 +1,5 @@
 {
-  "name": "get-subs-bitch",
+  "name": "get-my-subs-bitch",
   "version": "1.0.4",
   "description": "Node based create cv from resume.json",
   "main": "./index.js",
@@ -11,7 +11,7 @@
   },
   "preferGlobal": "true",
   "bin": {
-    "getSubsBitch": "index.js"
+    "getMySubsBitch": "index.js"
   },
   "dependencies": {
     "findit": "^2.0.0",
@@ -24,9 +24,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mikel063093/get-subs-bitch.git"
+    "url": "https://github.com/mikel063093/get-my-subs-bitch.git"
   },
-  "homepage": "https://github.com/mikel063093/get-subs-bitch",
+  "homepage": "https://github.com/mikel063093/get-my-subs-bitch.git",
   "author": "mikealegria <mikel063093@gmail.com> (http://mikealegria.co/)",
   "license": "MIT"
 }
