@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var opensubtitles = require('subtitler'),
   userArgs, searchPattern, Token, lang, param, finder, Files = [],
   find = require('findit'),
