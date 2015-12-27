@@ -14,6 +14,7 @@
     "getSubsBitch": "index.js"
   },
   "dependencies": {
+    "findit": "^2.0.0",
     "subtitler": "^2.4.0"
   },
   "keywords": [
