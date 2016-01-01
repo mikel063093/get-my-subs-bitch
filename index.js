@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var opensubtitles = require('subtitler'),
-  userArgs, searchPattern, Token, lang, param, finder, Files = [],
+'use strict'
+var opensubtitles = require('subtitler'), Token,
   find = require('findit'),
   path = require('path'),
   fs = require('fs')
@@ -31,13 +31,13 @@ function onLogin (token) {
 function getMovieParams () {
   console.log('getMovieParams')
   return new Promise(function (resolve, reject) {
-    userArgs = process.argv.slice(2)
-    searchPattern = userArgs[0]
-    lang = userArgs[1]
+    let userArgs = process.argv.slice(2)
+    let searchPattern = userArgs[0]
+    let lang = userArgs[1]
     if (searchPattern === undefined) {
       return reject('not movie params')
     }
-    param = {
+    let param = {
       searchPattern,
       lang: lang !== undefined ? lang : 'spa'
     }
@@ -58,7 +58,7 @@ function downloadSubs (movie, token) {
         if (!Array.isArray(results)) return reject('results not found')
         opensubtitles.downloader.download(results, 1, movie.searchPattern, null)
         opensubtitles.downloader.on('downloaded', function (mov) {
-          // console.log('file download on ' + mov.file)
+          console.log('file download on ' + mov.file)
           return resolve(results)
         })
       // opensubtitles.api.logout(token)
@@ -66,21 +66,28 @@ function downloadSubs (movie, token) {
   })
 }
 function walkDir (dr, movie) {
-  finder = find(dr)
+  let finder = find(dr)
+  let Files = []
   finder.on('file', function (file, stat) {
-    var base = path.extname(file)
+    let base = path.extname(file)
 
     if (base === '.mkv' || base === '.avi') {
       Files.push(file)
     }
   })
+
   finder.on('end', function () {
-    var requests = Files.reduce((promiseChain, item) => {
+    // let it = downloadIterator(Files)
+    // while (!it.next().done) {
+    //   console.log(it.next().value)
+    // }
+    let requests = Files.reduce((promiseChain, item) => {
       return promiseChain.then(new Promise((resolve) => {
-        param = {
+        let param = {
           searchPattern: item,
           lang: movie.lang
         }
+        console.log('start download for ' + item)
         downloadSubsAsync(param, resolve)
       }))
     }, Promise.resolve())
@@ -97,6 +104,19 @@ function downloadSubsAsync (item, resolve) {
       resolve()
     })
 }
+
+function downloadIterator (array) {
+  var nextIndex = 0
+  return {
+    next: function () {
+      return nextIndex < array.length ?
+        {value: downloadSubs(array[nextIndex++], Token).then(res => {
+            return 'ok'
+        }), done: false} : {done: true}
+    }
+  }
+}
+
 function onLogOut () {
   opensubtitles.api.logout(Token)
 }
